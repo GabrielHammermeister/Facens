@@ -16,6 +16,6 @@ O repositório é organizado da seguinte forma:
 
 Se você é um aluno da Facens e deseja contribuir com códigos das aulas, siga os passos abaixo:
 
-1. Crie uma nova branch com o nome da disciplina ou aula em que você deseja adicionar código. Formato: **nome-da-matéria/aula-00**
+1. Crie uma nova branch com o nome da disciplina ou aula em que você deseja adicionar código. Formato: **nome-da-matéria/dd-MM**
 2. Adicione seus códigos à branch correspondente.
 3. Faça um pull request para que possamos revisar e mesclar suas contribuições.
