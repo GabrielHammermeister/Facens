@@ -1,5 +1,9 @@
 # file_handler.py
 import os
+
+# NAO CONSEGUIMOS RETORNAR O ARQUIVO INDEX.HTML PARA O CLIENTE
+# DEVIDO A UM ERRO DE FORMATO INVALIDO
+
 def read_file(file_path, client_socket):
     # valida se o arquivo e valido
     if not os.path.exists(file_path) or not os.path.isfile(file_path):
