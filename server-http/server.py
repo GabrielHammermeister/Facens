@@ -22,7 +22,7 @@ def kill_previous_proccess(port):
 
 def main():
     host = '127.0.0.1'
-    port = 8082
+    port = 8080
     # Verifique se a porta está em uso
     try:
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -50,8 +50,6 @@ def main():
         request_lines = request_data.split('\n')
         request_line = request_lines[0]
         method, url, _ = request_line.strip().split()
-
-        print("request: ", method, url)
 
         # Inicia uma nova thread para lidar com a conexão
         threading.Thread(target=handle_request(client_socket, method, url), args=(client_socket, method, url)).start()
