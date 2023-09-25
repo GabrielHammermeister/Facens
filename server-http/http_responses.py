@@ -1,13 +1,20 @@
 # http_responses.py
 
-def generate_response(status_code, headers, content):
-    # Gera uma resposta HTTP completa
-    pass
+def response_200(status_code, content):
+    print(f"Status Code: {status_code}")
+    print(f"content: {content}")
+    return f"Status Code: {status_code} \n\ncontent: {content}"
+def response_404():
+    status_code = "404 Not Found"
+    error_message = "Arquivo não encontrado."
+    print(f"Status Code: {status_code}")
+    print(f"Error Message: {error_message}")
+    return f"Status Code: {status_code} \n\nerror_message: {error_message}"
 
-def generate_404_response():
-    # Gera uma resposta HTTP para o erro 404 (Arquivo não encontrado)
-    pass
 
-def generate_502_response():
-    # Gera uma resposta HTTP para o erro 502 (Função inválida)
-    pass
+def response_502():
+    status_code = "502 Bad Gateway"
+    error_message = "Função inválida."
+    print(f"Status Code: {status_code}")
+    print(f"Error Message: {error_message}")
+    return f"Status Code: {status_code} \n\nerror_message: {error_message}"
