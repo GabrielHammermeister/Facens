@@ -1,17 +1,12 @@
-
 /*
 
-Mateus da Silva do Prado - 190477
-Felipe Lima Carvalho - 190190
-Derik Caceres - 190695
-João Victor Timo - 190826
-
+Gabriel Hammermeister M. da Costa   190162
+Leonardo Muhamed Batista            190448
+Enrico Reis Conto                   190793
 */
-
 
 #include <stdio.h>
 
-//#define TAMANHO_BUFFER 6
 #define SUCCESS 0
 #define FAIL 1
 #define REPEAT 2
@@ -21,6 +16,7 @@ typedef void (*Processo)();
 
 typedef struct {
     Processo processo;
+    int repeat;
 } buffer_circular;
 
 buffer_circular pool[POOL_SIZE];
@@ -31,100 +27,86 @@ int head = 0;
 void inicializarBuffer() {
     for (int i = 0; i < POOL_SIZE; i++) {
         pool[i].processo = NULL;
+        pool[i].repeat = 0;
     }
-    printf("Processo de inialização do buffer finalizado\n\n");
+    printf("Inicialização do buffer concluída.\n\n");
 }
 
-int filaCheia(){
+int filaCheia() {
     return (tail + 1) % POOL_SIZE == head;
 }
 
-char kernelAddProc(Processo* nProcesso) {
-    //Verifica de há espaço livre
+int vazia() {
+    return head == tail;
+}
+
+char kernelAddProc(Processo nProcesso) {
+    // Verifica se há espaço livre
     if (((tail + 1) % POOL_SIZE) != head) {
         pool[tail].processo = nProcesso;
+        pool[tail].repeat = 0;
         tail = (tail + 1) % POOL_SIZE;
-        printf("Inicio: %d, Fim: %d\n", head, tail);
+        printf("Processo adicionado com sucesso. Início: %d, Fim: %d\n", head, tail);
         return SUCCESS;
     }
     return FAIL;
 }
 
-int vazia(){
-	return (head == tail );
-}
+int removeProcesso() {
+    if (vazia()) {
+        printf("Fila vazia!!\n");
+        return 0;
+    }
 
-int removeProcesso(){
-    
-	if(vazia()){
-		printf("Fila vazia!!\n");
-		return 0;
-	}
-	
-	pool[head++]; // remove o elemento da fila
-	
-	if(head == POOL_SIZE)
-		head = 0;
-		
-	return 1;
-}
+    head = (head + 1) % POOL_SIZE; // Move o índice da cabeça para remover o elemento da fila
 
+    return 1;
+}
 
 void executarBuffer() {
-    if (pool[head].processo != NULL) {
-        pool[head].processo();
-        removeProcesso();
-    }else{
-        printf("Função no índice %d é nula!\n", head);
-    } 
+    if (!vazia()) {
+        Processo processoAtual = pool[head].processo;
+        printf("Executando processo...\n");
+        processoAtual(); // Executa o processo
+        if (pool[head].repeat) {
+            // Processo deseja repetição, adiciona novamente ao buffer
+            kernelAddProc(processoAtual);
+        }
+        removeProcesso(); // Remove o processo após execução
+    } else {
+        printf("Nenhum processo a ser executado.\n");
+    }
 }
 
-
-void funcao1() {
-    printf("Função 1\n");
+void processoA() {
+    printf("Processo A em execução.\n");
 }
 
-void funcao2() {
-    printf("Função 2\n");
+void processoB() {
+    printf("Processo B em execução.\n");
 }
 
-void funcao3() {
-    printf("Função 3\n");
-}
-
-void funcao4() {
-    printf("Função 4\n");
-}
-
-
-void funcao5() {
-    printf("Função 5\n");
+void processoC() {
+    printf("Processo C em execução.\n");
 }
 
 void kernelLoop() {
-    while(1) {
-        for(int i = 0 ; i < POOL_SIZE ; i++) {
-            executarBuffer();
-
-        }
+    while (1) {
+        executarBuffer();
     }
-    // refinar
-}
-void kernelInit() {
-    // completar
 }
 
+void kernelInit() {
+    // Inicialização do kernel, se necessário
+}
 
 int main() {
     inicializarBuffer();
-    kernelAddProc(&funcao1);
-    kernelAddProc(&funcao2);
+    kernelAddProc(processoA);
+    kernelAddProc(processoB);
+    kernelAddProc(processoC);
 
-    kernelAddProc(&funcao3);
-
-    kernelAddProc(&funcao4);
-
-    executarBuffer();
+    kernelLoop(); // Iniciar o loop de execução do kernel
 
     return 0;
 }
